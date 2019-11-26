@@ -4,6 +4,7 @@ import ctypes
 import sys
 import os.path
 import platform
+import shutil
 from urllib.request import Request, urlopen
 
 wallURL = "https://www.prewired.org/assets/images/prewired-wallpaper_01.jpg"
@@ -17,7 +18,7 @@ class Error(Exception):
     pass
 
 
-class OSError(Error):
+class UnknownOSError(Error):
     """
     Raised when an unknown or unsupported operating system
     is detected
@@ -35,52 +36,65 @@ try:
         'Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
     req.add_header('User-Agent', 'Prewired Startup Utility')
 
-    print("p-startup > Downloading wallpaper from " + wallURL + "... ", end="")
+    print("psu > Downloading wallpaper from " + wallURL + "... ", end="")
     wallpaper = urlopen(req)
     with open('prewired-wallpaper.jpg', 'wb') as output:
         output.write(wallpaper.read())
     print(" done!")
 
-    print("p-startup > Detecting OS... ", end="")
+    print("psu > Detecting OS... ", end="")
 
     if platform.system() == "Linux":
         """ Linux """
+
         print("Linux detected")
-        print("p-startup > Detecting distro... ", end="")
+        print("psu > Detecting distro... ", end="")
         platTokens = platform.platform().split("-")
 
         for t in platTokens:
             if(t.lower() == "ubuntu"):
-                print("Ubuntu")
-                print("p-startup > YET TO IMPLEMENT")
-                print("p-startup > Done")
+                print("Ubuntu, assuming Gnome")
+                print("psu > Setting wallpaper...", end="")
+                exec('gsettings set org.gnome.desktop.background picture-uri "' +
+                     dir + '/prewired-wallpaper.jpg"')
+                print("done")
+                print("Clearing mozilla data...", end="")
+                if(os.path.isdir("/home/prewired/.mozilla")):
+                    shutil.rmtree("/home/prewired/.mozilla")
+                print("done")
                 sys.exit(0)
 
-        raise OSError(platform.platform())
+            if(t.lower() == "fedora"):
+                print("Fedora")
+                print("psu > Cannot set wallpaper")
+
+        raise UnknownOSError(platform.platform())
 
     elif platform.system() == "Windows":
         """ Windows """
+
         print(" Windows detected")
-        print("p-startup > Setting wallpaper... ", end="")
-        print(dir + "\\prewired-wallpaper.jpg")
+        print("psu > Setting wallpaper... ", end="")
         ctypes.windll.user32.SystemParametersInfoW(
             20, 0, dir+'\\prewired-wallpaper.jpg', 0)
-        print("p-startup > Done")
+        print("done")
+        if(os.path.isdir("/home/prewired/.mozilla")):
+            shutil.rmtree("/home/prewired/.mozilla")
         sys.exit(0)
 
     elif platform.system() == "Darwin" or platform.system() == "OS X":
         """ OS X """
-        raise OSError(platform.system())
+        raise UnknownOSError(platform.system())
 
     else:
         """ Unknown OS """
-        raise OSError(platform.system())
+        raise UnknownOSError(platform.system())
 
-except OSError as e:
+except UnknownOSError as e:
     print(" Unsupported OS detected!")
     print(e)
     sys.exit(1)
     raise
 
 finally:
-    print("p-startup > Exiting")
+    print("psu > Exiting")
