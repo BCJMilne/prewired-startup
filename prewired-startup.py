@@ -54,11 +54,11 @@ try:
         for t in platTokens:
             if(t.lower() == "ubuntu"):
                 print("Ubuntu, assuming Gnome")
-                print("psu > Setting wallpaper...", end="")
+                print("psu > Setting wallpaper... ", end="")
                 exec('gsettings set org.gnome.desktop.background picture-uri "' +
                      dir + '/prewired-wallpaper.jpg"')
                 print("done")
-                print("Clearing mozilla data...", end="")
+                print("Clearing Mozilla data... ", end="")
                 if(os.path.isdir("/home/prewired/.mozilla")):
                     shutil.rmtree("/home/prewired/.mozilla")
                 print("done")
@@ -78,8 +78,17 @@ try:
         ctypes.windll.user32.SystemParametersInfoW(
             20, 0, dir+'\\prewired-wallpaper.jpg', 0)
         print("done")
-        if(os.path.isdir("/home/prewired/.mozilla")):
-            shutil.rmtree("/home/prewired/.mozilla")
+
+        print("psu > Clearing Mozilla data... ", end="")
+        if(os.path.isdir("C:\\Users\\prewired-attendee\\AppData\\Roaming\\Mozilla\\Firefox")):
+            shutil.rmtree("C:\\Users\\prewired-attendee\\AppData\\Roaming\\Mozilla\\Firefox")
+        print("done")
+
+        print("psu > Clearing Chrome data... ", end="")
+        if(os.path.isdir("C:\\Users\\prewired-attendee\\AppData\\Local\\Google\\Chrome\\User Data")):
+            shutil.rmtree("C:\\Users\\prewired-attendee\\AppData\\Local\\Google\\Chrome\\User Data")
+        print("done")
+
         sys.exit(0)
 
     elif platform.system() == "Darwin" or platform.system() == "OS X":
@@ -91,7 +100,7 @@ try:
         raise UnknownOSError(platform.system())
 
 except UnknownOSError as e:
-    print(" Unsupported OS detected!")
+    print("Unsupported OS detected!")
     print(e)
     sys.exit(1)
     raise
