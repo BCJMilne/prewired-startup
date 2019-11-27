@@ -8,7 +8,7 @@ import shutil
 from urllib.request import Request, urlopen
 
 wallURL = "https://www.prewired.org/assets/images/prewired-wallpaper_01.jpg"
-dir = os.path.dirname(os.path.abspath(__file__))
+currentDir = os.path.dirname(os.path.abspath(__file__))
 
 
 class Error(Exception):
@@ -40,7 +40,7 @@ try:
     wallpaper = urlopen(req)
     with open('prewired-wallpaper.jpg', 'wb') as output:
         output.write(wallpaper.read())
-    print(" done!")
+    print("done!")
 
     print("psu > Detecting OS... ", end="")
 
@@ -55,10 +55,10 @@ try:
             if(t.lower() == "ubuntu"):
                 print("Ubuntu, assuming Gnome")
                 print("psu > Setting wallpaper... ", end="")
-                exec('gsettings set org.gnome.desktop.background picture-uri "' +
-                     dir + '/prewired-wallpaper.jpg"')
+                os.system('gsettings set org.gnome.desktop.background picture-uri "' +
+                     currentDir + '/prewired-wallpaper.jpg"')
                 print("done")
-                print("Clearing Mozilla data... ", end="")
+                print("psu > Clearing Mozilla data... ", end="")
                 if(os.path.isdir("/home/prewired/.mozilla")):
                     shutil.rmtree("/home/prewired/.mozilla")
                 print("done")
@@ -76,7 +76,7 @@ try:
         print(" Windows detected")
         print("psu > Setting wallpaper... ", end="")
         ctypes.windll.user32.SystemParametersInfoW(
-            20, 0, dir+'\\prewired-wallpaper.jpg', 0)
+            20, 0, currentDir+'\\prewired-wallpaper.jpg', 0)
         print("done")
 
         print("psu > Clearing Mozilla data... ", end="")
