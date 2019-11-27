@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import ctypes
 import sys
@@ -36,16 +36,16 @@ try:
         'Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
     req.add_header('User-Agent', 'Prewired Startup Utility')
 
-    print("psu > Downloading wallpaper from " + wallURL + "... ", end="")
-    wallpaper = urlopen(req)
-    with open('prewired-wallpaper.jpg', 'wb') as output:
-        output.write(wallpaper.read())
-    print("done!")
-
     print("psu > Detecting OS... ", end="")
 
     if platform.system() == "Linux":
         """ Linux """
+
+        print("psu > Downloading wallpaper from " + wallURL + "... ", end="")
+        wallpaper = urlopen(req)
+        with open('/tmp/prewired-wallpaper.jpg', 'wb') as output:
+            output.write(wallpaper.read())
+        print("done!")
 
         print("Linux detected")
         print("psu > Detecting distro... ", end="")
@@ -55,8 +55,8 @@ try:
             if(t.lower() == "ubuntu"):
                 print("Ubuntu, assuming Gnome")
                 print("psu > Setting wallpaper... ", end="")
-                os.system('gsettings set org.gnome.desktop.background picture-uri "' +
-                     currentDir + '/prewired-wallpaper.jpg"')
+                os.system(
+                    'gsettings set org.gnome.desktop.background picture-uri /tmp/prewired-wallpaper.jpg')
                 print("done")
                 print("psu > Clearing Mozilla data... ", end="")
                 if(os.path.isdir("/home/prewired/.mozilla")):
@@ -73,20 +73,28 @@ try:
     elif platform.system() == "Windows":
         """ Windows """
 
+        print("psu > Downloading wallpaper from " + wallURL + "... ", end="")
+        wallpaper = urlopen(req)
+        with open('C:\\Users\\prewired\\Pictures\\prewired-wallpaper.jpg', 'wb') as output:
+            output.write(wallpaper.read())
+        print("done!")
+
         print(" Windows detected")
         print("psu > Setting wallpaper... ", end="")
         ctypes.windll.user32.SystemParametersInfoW(
-            20, 0, currentDir+'\\prewired-wallpaper.jpg', 0)
+            20, 0, 'C:\\Users\\prewired\\Pictures\\prewired-wallpaper.jpg', 0)
         print("done")
 
         print("psu > Clearing Mozilla data... ", end="")
-        if(os.path.isdir("C:\\Users\\prewired-attendee\\AppData\\Roaming\\Mozilla\\Firefox")):
-            shutil.rmtree("C:\\Users\\prewired-attendee\\AppData\\Roaming\\Mozilla\\Firefox")
+        if(os.path.isdir("C:\\Users\\prewired\\AppData\\Roaming\\Mozilla\\Firefox")):
+            shutil.rmtree(
+                "C:\\Users\\prewired\\AppData\\Roaming\\Mozilla\\Firefox")
         print("done")
 
         print("psu > Clearing Chrome data... ", end="")
-        if(os.path.isdir("C:\\Users\\prewired-attendee\\AppData\\Local\\Google\\Chrome\\User Data")):
-            shutil.rmtree("C:\\Users\\prewired-attendee\\AppData\\Local\\Google\\Chrome\\User Data")
+        if(os.path.isdir("C:\\Users\\prewired\\AppData\\Local\\Google\\Chrome\\User Data")):
+            shutil.rmtree(
+                "C:\\Users\\prewired\\AppData\\Local\\Google\\Chrome\\User Data")
         print("done")
 
         sys.exit(0)
