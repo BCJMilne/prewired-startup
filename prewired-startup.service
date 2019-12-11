@@ -1,0 +1,12 @@
+[Service]
+Type=oneshot
+ExecStart=/opt/prewired-startup.py
+User=prewired
+Environment=DISPLAY=:0
+
+[Unit]
+After=network-online.target
+Wants=network-online.target
+
+[Install]
+WantedBy=multi-user.target
