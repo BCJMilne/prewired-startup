@@ -1,8 +1,0 @@
-# To be placed in /home/prewired/.config/autostart
-
-[Desktop Entry]
-Type=Application
-Name=Prewired Startup Script
-Exec=/bin/bash “sleep 5 && /opt/prewired-startup.py”
-
-Name[en_GB]=reset.desktop
